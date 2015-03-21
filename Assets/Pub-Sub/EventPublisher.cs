@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class EventEmitter : MonoBehaviour {
+public class EventPublisher : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
