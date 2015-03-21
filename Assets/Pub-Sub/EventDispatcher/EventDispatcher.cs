@@ -89,7 +89,7 @@ public static class EventDispatcher {
 	/// </summary>
 	/// <param name="key">Key to subscribe to</param>
 	/// <param name="d">boolean action to run on publish</param>
-	public static void Subscribe(string key, Func<GameObject, bool> d) {
+	public static void SubscribeBool(string key, Func<GameObject, bool> d) {
 		//If the subscription already contains the key, 
 		//add this delegate to the existing delegate under the given key
 		if(boolSubscriptions.ContainsKey(key)) {
@@ -98,6 +98,76 @@ public static class EventDispatcher {
 		} else {
 			//Create a new entry in the subscription dictonary
 			boolSubscriptions.Add(key, d);
+		}
+	}
+
+	/// <summary>
+	/// Get the current number of keys in the VoidSubscriptions. This is used primarily for Debugging
+	/// </summary>
+	/// <value>Current Number of keys in the Void Subscriptions</value>
+	public static int VoidSize {
+		get { return voidSubscriptions.Count;}
+	}
+
+	/// <summary>
+	/// Get the current number of keys in the BoolSubscriptions. This is used primarily for Debugging
+	/// </summary>
+	/// <value>Current Number of keys in the Bool Subscriptions</value>
+	public static int BoolSize {
+		get { return boolSubscriptions.Count; }
+	}
+
+	/// <summary>
+	/// Unsubscribe an Action Event from the Global Pub Sub. Check if this delegate
+	/// exists. If it does, remove the method subscription. Then check if there
+	/// are any methods left to this delegate.
+	/// </summary>
+	/// <param name="key">key Subscribed to</param>
+	/// <param name="d">d Method to check for</param>
+	public static void Unsubscribe(string key, Action<GameObject> d) {
+		if(voidSubscriptions.ContainsKey(key)) {
+			if(voidSubscriptions[key] != null){
+				voidSubscriptions[key] -= d;
+				ClearActionCheck(key); //Remove delegate if no methods inside
+			}
+		}
+	}
+
+	/// <summary>
+	/// Unsubscribe a Func Event from the Global Pub Sub. Check if this delegate
+	/// exists. If it does, remove the method subscription. Then check if there
+	/// are any methods left to this delegate.
+	/// </summary>
+	/// <param name="key">key Subscribed to</param>
+	/// <param name="d">d Method to check for</param>
+	public static void UnsubscribeBool(String key, Func<GameObject, bool> d) {
+		if(boolSubscriptions.ContainsKey(key)) {
+			if(boolSubscriptions != null) {
+				boolSubscriptions[key] -= d;
+				ClearFuncCheck(key); //Remove Delegate if no methods inside
+			}
+		}
+	}
+
+	/// <summary>
+	/// Search the boolSubscriptions for a key. If the key exists, but the 
+	/// delegate has no method attached, remove the delegate and key.
+	/// </summary>
+	/// <param name="key">key Key to search with</param>
+	static void ClearFuncCheck(string key) {
+		if (boolSubscriptions[key] == null) {
+			boolSubscriptions.Remove(key);
+		}
+	}
+
+	/// <summary>
+	/// Search the voidSubscriptions for a key. If the key exists, but the 
+	/// delegate has no method attached, remove the delegate and key.
+	/// </summary>
+	/// <param name="key">key Key to search with</param>
+	static void ClearActionCheck(string key) {
+		if (voidSubscriptions[key] == null) {
+			voidSubscriptions.Remove(key);
 		}
 	}
 

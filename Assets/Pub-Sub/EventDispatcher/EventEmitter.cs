@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-using System.Collections;
+using System.Collections.Generic;
 using System;
 
 /// <summary>
@@ -7,11 +7,9 @@ using System;
 /// inherits from this script, the class can make publish and subscription calls.
 /// </summary>
 public abstract class EventEmitter : MonoBehaviour {
+	private List<KeyValuePair<string, Action<GameObject>>> actionEvents = new List<KeyValuePair<string, Action<GameObject>>>();
+	private List<KeyValuePair<string, Func<GameObject, bool>>> funcEvents = new List<KeyValuePair<string, Func<GameObject, bool>>>();
 
-	// public void Subscribe(string key, Func<GameObject, bool> sub) {
-	// 	Debug.Log(sub.Method);
-	// 	EventDispatcher.Subscribe(key, sub);
-	// }
 
 	/// <summary>
 	/// Subscribe to an event in the pub sub dictionaries. This will attach
@@ -21,7 +19,8 @@ public abstract class EventEmitter : MonoBehaviour {
 	/// <param name="key">Name of Value in Dictionary</param>
 	/// <param name="sub">Subscription of methods to Key</param>
 	public void SubscribeBool(string key, Func<GameObject, bool> b){
-		EventDispatcher.Subscribe(key, b);
+		funcEvents.Add(new KeyValuePair<string, Func<GameObject, bool>>(key, b));
+		EventDispatcher.SubscribeBool(key, b);
 	}
 
 	/// <summary>
@@ -32,6 +31,7 @@ public abstract class EventEmitter : MonoBehaviour {
 	/// <param name="key">Name of Value in Dictionary</param>
 	/// <param name="sub">Subscription of methods to Key</param>
 	public void Subscribe(string key, Action<GameObject> sub) {
+		actionEvents.Add(new KeyValuePair<string, Action<GameObject>>(key, sub));
 		EventDispatcher.Subscribe(key, sub);
 	}
 
@@ -57,5 +57,69 @@ public abstract class EventEmitter : MonoBehaviour {
 	/// <param name="returnValue">Boolean returned from the publish event</param>
 	public bool PublishBool(string key, GameObject g) {
 		return EventDispatcher.PublishBool(key, g);
+	}
+
+	/// <summary>
+	/// Unsubscribe an Action Event from the Global pub sub.
+	/// This will check if the action event exists, and if it does,
+	/// remove it from the local memory, and then remove it from the global
+	/// pub sub.
+	/// </summary>
+	/// <param name="key">key Subscrbed to</param>
+	/// <param name="sub">sub Method to be called</param>
+	public void Unsubscribe(string key, Action<GameObject> sub) {
+		int index = actionEvents.FindIndex(pair => pair.Key == key && pair.Value == sub);
+		if(index != -1) {
+			actionEvents.RemoveAt(index);
+			UnsubscribeDispatcher(key, sub);
+		}
+	}
+
+	/// <summary>
+	/// Unsubscribe a Func Event from the Global pub sub.
+	/// This will check if the Func event exists, and if it does,
+	/// remove it from the local memory, and then remove it from the global
+	/// pub sub.
+	/// </summary>
+	/// <param name="key">key Subscrbed to</param>
+	/// <param name="sub">sub Method to be called</param>
+	public void UnsubscribeBool(string key, Func<GameObject, bool> sub) {
+		int index = funcEvents.FindIndex(pair => pair.Key == key && pair.Value == sub);
+		if(index != -1) {
+			funcEvents.RemoveAt(index);
+			UnsubscribeBoolDispatcher(key, sub);
+		}
+	}
+
+	/// <summary>Call Unsubscribe in the Event Dispatcher</summary>
+	/// <param name="key">key Subscribed to</param>
+	/// <param name="sub">sub Method to be called</param>
+	void UnsubscribeDispatcher(string key, Action<GameObject> sub) {
+		EventDispatcher.Unsubscribe(key, sub);
+	}
+
+	/// <summary>Call Ubsubscribe in the Event Dispatcher</summary>
+	/// <param name="key">key Subscribed to</param>
+	/// <param name="sub">sub Method to be called</param>
+	public void UnsubscribeBoolDispatcher(string key, Func<GameObject, bool> sub) {
+		EventDispatcher.UnsubscribeBool(key, sub);
+	}
+
+	/// <summary>Unsubscribe all Pubs Subs When Object is Disabled.</summary>
+	void OnDisable() {
+
+		//Clear all Action Events
+		 foreach(KeyValuePair<string, Action<GameObject>> pair in actionEvents) {
+		 	UnsubscribeDispatcher(pair.Key, pair.Value);
+		 }
+
+		 actionEvents.Clear();
+
+		 //Clear all Func Events
+		 foreach(KeyValuePair<string, Func<GameObject, bool>> pair in funcEvents) {
+		 	UnsubscribeBoolDispatcher(pair.Key, pair.Value);
+		 }
+
+		 funcEvents.Clear();
 	}
 }

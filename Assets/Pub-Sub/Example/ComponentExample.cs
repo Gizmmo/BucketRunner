@@ -8,5 +8,7 @@ public class ComponentExample : Grunt {
 		Publish("ComponentStarted", gameObject);
 		PublishBool("ComponentStarted", gameObject);
 	}
+
+	
 	
 }

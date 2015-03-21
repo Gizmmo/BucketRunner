@@ -17,4 +17,11 @@ public class ManagerExample : Manager {
 		Debug.Log("Second One");
 		return true;
 	}
+
+	void Update() {
+		if(Input.GetKeyDown("space")) {
+			Unsubscribe("ComponentStarted", ComponentHandler);
+			UnsubscribeBool("ComponentStarted", SecondTest);
+		}
+	}
 }
