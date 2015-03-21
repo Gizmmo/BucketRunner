@@ -1,22 +1,17 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System;
 
 /// <summary>
 /// EventEmitter is used to attach Scripts to the Global PubSub System. If a script
 /// inherits from this script, the class can make publish and subscription calls.
 /// </summary>
-public abstract class EventEmitter : AdvMonoBehaviour {
+public abstract class EventEmitter : MonoBehaviour {
 
-	/// <summary>
-	/// Subscribe to an event in the pub sub dictionaries. This will attach
-	/// to the dictionary containing only VoidActions, which do not return values
-	/// on execution.
-	/// </summary>
-	/// <param name="key">Name of Value in Dictionary</param>
-	/// <param name="sub">Subscription of methods to Key</param>
-	public void Subscribe(string key, VoidAction sub) {
-		EventDispatcher.Subscribe(key, sub);
-	}
+	// public void Subscribe(string key, Func<GameObject, bool> sub) {
+	// 	Debug.Log(sub.Method);
+	// 	EventDispatcher.Subscribe(key, sub);
+	// }
 
 	/// <summary>
 	/// Subscribe to an event in the pub sub dictionaries. This will attach
@@ -25,8 +20,19 @@ public abstract class EventEmitter : AdvMonoBehaviour {
 	/// </summary>
 	/// <param name="key">Name of Value in Dictionary</param>
 	/// <param name="sub">Subscription of methods to Key</param>
-	public void Subscribe(string key, BoolAction b) {
+	public void SubscribeBool(string key, Func<GameObject, bool> b){
 		EventDispatcher.Subscribe(key, b);
+	}
+
+	/// <summary>
+	/// Subscribe to an event in the pub sub dictionaries. This will attach
+	/// to the dictionary containing only VoidActions, which do not return values
+	/// on execution.
+	/// </summary>
+	/// <param name="key">Name of Value in Dictionary</param>
+	/// <param name="sub">Subscription of methods to Key</param>
+	public void Subscribe(string key, Action<GameObject> sub) {
+		EventDispatcher.Subscribe(key, sub);
 	}
 
 	/// <summary>
@@ -49,7 +55,7 @@ public abstract class EventEmitter : AdvMonoBehaviour {
 	/// <param name="key">Name of the Event in Dictionary</param>
 	/// <param name="g">Game Object where the Event took place </param>
 	/// <param name="returnValue">Boolean returned from the publish event</param>
-	public void Publish(string key, GameObject g, out bool returnValue) {
-		EventDispatcher.Publish(key, g, out returnValue);
+	public bool PublishBool(string key, GameObject g) {
+		return EventDispatcher.PublishBool(key, g);
 	}
 }

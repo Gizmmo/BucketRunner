@@ -1,9 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System;
 
 //Public delegates to use in other classes and this class
-public delegate void VoidAction (GameObject g);
 public delegate bool BoolAction (GameObject g);
 
 /// <summary>
@@ -12,8 +12,8 @@ public delegate bool BoolAction (GameObject g);
 /// is associated with the publish.
 /// </summary>
 public static class EventDispatcher {
-	private static Dictionary<string, VoidAction> voidSubscriptions = new Dictionary<string, VoidAction>();  //Used for the void actions
-	private static Dictionary<string, BoolAction> boolSubscriptions = new Dictionary<string, BoolAction>();  //Used for the boolean actions
+	private static Dictionary<string, Action<GameObject>> voidSubscriptions = new Dictionary<string, Action<GameObject>>();  //Used for the void actions
+	private static Dictionary<string, Func<GameObject, bool>> boolSubscriptions = new Dictionary<string, Func<GameObject, bool>>();  //Used for the boolean actions
 
 	/// <summary>
 	/// Publish the specified key, and gameobject  to subscribed handlers, and then pass the return value back.
@@ -21,9 +21,9 @@ public static class EventDispatcher {
 	/// <param name="key">Key to check subscriptions for</param>
 	/// <param name="g">The gameobject component to pass to the subscribers.</param>
 	/// <param name="returnValue">Return value of the boolean methods.</param>
-	public static void Publish(string key, GameObject g, out bool returnValue) {
+	public static bool PublishBool(string key, GameObject g) {
 		//make true so that is there is no subscription, its automatically true
-		returnValue = true;
+		bool returnValue = true;
 		//Check to make sure the key exists
 		if(boolSubscriptions.ContainsKey(key)) {
 			//Check to see if there is a subscription by the given key
@@ -32,6 +32,7 @@ public static class EventDispatcher {
 				returnValue = DoesBoolExist(boolSubscriptions[key], g);
 			}
 		}
+		return returnValue;
 	}
 
 	/// <summary>
@@ -39,8 +40,8 @@ public static class EventDispatcher {
 	/// return false. If none of them are false, we can return true.
 	/// </summary>
 	/// <param name="actions">Event storage of methods.</param>
-	private static bool DoesBoolExist(BoolAction actions, GameObject g) {
-		foreach(BoolAction bAction in actions.GetInvocationList()) {
+	private static bool DoesBoolExist(Func<GameObject, bool> actions, GameObject g) {
+		foreach(Func<GameObject, bool> bAction in actions.GetInvocationList()) {
 			//If the return value of the action is ever false, return value must be false
 			if (bAction(g) == false) {
 				return false;
@@ -71,7 +72,7 @@ public static class EventDispatcher {
 	/// </summary>
 	/// <param name="key">Key to subscribe to</param>
 	/// <param name="d">The void action to run when published</param>
-	public static void Subscribe(string key, VoidAction d) {
+	public static void Subscribe(string key, Action<GameObject> d) {
 		//If the subscription already contains the key, 
 		//add this delegate to the existing delegate under the given key
 		if(voidSubscriptions.ContainsKey(key)) {
@@ -88,7 +89,7 @@ public static class EventDispatcher {
 	/// </summary>
 	/// <param name="key">Key to subscribe to</param>
 	/// <param name="d">boolean action to run on publish</param>
-	public static void Subscribe(string key, BoolAction d) {
+	public static void Subscribe(string key, Func<GameObject, bool> d) {
 		//If the subscription already contains the key, 
 		//add this delegate to the existing delegate under the given key
 		if(boolSubscriptions.ContainsKey(key)) {
