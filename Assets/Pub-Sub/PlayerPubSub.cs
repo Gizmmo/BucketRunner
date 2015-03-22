@@ -8,16 +8,16 @@ public class PlayerPubSub : Manager {
     }
 
     void RegisterBuckets() {
-    	Subscribe("PickUp", HandleOnPickUp);
-        SubscribeBool("CanPickUp", HandleCanPickUp);
+    	GlobalSubscribe("PickUp", HandleOnPickUp);
+        GlobalSubscribeBool("CanPickUp", HandleCanPickUp);
     }
 
     public void PickUpBucket() {
-        Publish("PickUpTriggered", gameObject);
+        GlobalPublish("PickUpTriggered", gameObject);
     }
 
     public void FillAllBuckets() {
-        Publish("FillAllBuckets", gameObject);
+        GlobalPublish("FillAllBuckets", gameObject);
     }
     
     void HandleOnPickUp(GameObject g) {

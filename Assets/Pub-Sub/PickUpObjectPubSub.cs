@@ -4,15 +4,15 @@ public class PickUpObjectPubSub : Grunt {
     private bool isFull;
 
     void OnEnable() {
-    	Subscribe("PickUpTriggered", PickUp);
-    	Subscribe("FillAllBuckets", FillBucket);
-    	Publish("BucketAdded", gameObject);
+    	GlobalSubscribe("PickUpTriggered", PickUp);
+    	GlobalSubscribe("FillAllBuckets", FillBucket);
+    	GlobalPublish("BucketAdded", gameObject);
     }
     
     void PickUp(GameObject objectToFollow) {
-        if(PublishBool("CanPickUp", gameObject)) {
+        if(GlobalPublishBool("CanPickUp", gameObject)) {
             gameObject.transform.parent = objectToFollow.transform;
-            Publish("PickUp", gameObject);
+            GlobalPublish("PickUp", gameObject);
         }
     }
 

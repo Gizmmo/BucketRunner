@@ -9,10 +9,10 @@ public class OtherPubSub : Manager {
     }
 
     void RegisterBuckets() {
-        Subscribe("PickUp", HandleOnPickUp);
-        SubscribeBool("CanPickUp", HandleCanPickUp);
-        Subscribe("FillBucket", HandleOnFillBucket);
-        Subscribe("BucketAdded", HandleBucketAdded);
+        GlobalSubscribe("PickUp", HandleOnPickUp);
+        GlobalSubscribeBool("CanPickUp", HandleCanPickUp);
+        GlobalSubscribe("FillBucket", HandleOnFillBucket);
+        GlobalSubscribe("BucketAdded", HandleBucketAdded);
     }
 
     bool HandleCanPickUp(GameObject g) {

@@ -5,8 +5,8 @@ public class ManagerExample : Manager {
 	void Awake() {
 		// VoidAction events;
 		// events = ComponentHandler;
-		Subscribe("ComponentStarted", ComponentHandler);	
-		SubscribeBool("ComponentStarted", SecondTest);
+		GlobalSubscribe("ComponentStarted", ComponentHandler);	
+		GlobalSubscribeBool("ComponentStarted", SecondTest);
 	}
 
 	void ComponentHandler(GameObject g) {
@@ -16,5 +16,12 @@ public class ManagerExample : Manager {
 	bool SecondTest(GameObject g) {
 		Debug.Log("Second One");
 		return true;
+	}
+
+	void Update() {
+		if(Input.GetKeyDown("space")) {
+			GlobalUnsubscribe("ComponentStarted", ComponentHandler);
+			GlobalUnsubscribeBool("ComponentStarted", SecondTest);
+		}
 	}
 }
