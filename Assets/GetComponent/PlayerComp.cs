@@ -1,15 +1,22 @@
 ﻿using UnityEngine;
+using System.Collections.Generic;
 
 public class PlayerComp : MonoBehaviour {
     bool holdingObject;
-    
-    void Update() {
-    	if (Input.GetKeyDown("space")) {
-            GameObject[] buckets = GameObject.FindGameObjectsWithTag("Bucket");
-        	GameObject bucket = buckets[0];
-            PickUpObjectComp objScript = bucket.GetComponent<PickUpObjectComp>();
-            objScript.PickUp(gameObject);
-        }
+    private List<PickUpObjectComp> buckets = new List<PickUpObjectComp>();
+
+    public void PickUpBucket() {
+        buckets[0].PickUp(gameObject);
+    }
+
+    public void FillAllBuckets() {
+         foreach(var objectScript in buckets) {
+                objectScript.FillBucket();
+            }
+    }
+
+    public void AddBucket(PickUpObjectComp p) {
+        buckets.Add(p);
     }
     
     public bool HoldingObject {get; set;}

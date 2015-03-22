@@ -2,6 +2,7 @@
 
 public class OtherPubSub : Manager {
     int waterLevel = 0;
+    int bucketsOnGround;
     
     void OnEnable () {
         RegisterBuckets();
@@ -10,6 +11,8 @@ public class OtherPubSub : Manager {
     void RegisterBuckets() {
         Subscribe("PickUp", HandleOnPickUp);
         SubscribeBool("CanPickUp", HandleCanPickUp);
+        Subscribe("FillBucket", HandleOnFillBucket);
+        Subscribe("BucketAdded", HandleBucketAdded);
     }
 
     bool HandleCanPickUp(GameObject g) {
@@ -17,8 +20,16 @@ public class OtherPubSub : Manager {
     }
 
     void HandleOnPickUp(GameObject g) {
-        waterLevel++;
-        Debug.Log("Water level increased");
+        bucketsOnGround--;
     }
 
+    void HandleBucketAdded(GameObject g) {
+        bucketsOnGround++;
+    }
+
+    void HandleOnFillBucket(GameObject g) {
+        waterLevel++;
+    }
+
+    public int BucketsOnGround {get; set;}
 }

@@ -12,15 +12,16 @@ public class PlayerPubSub : Manager {
         SubscribeBool("CanPickUp", HandleCanPickUp);
     }
 
-    void Update() {
-    	if (Input.GetKeyDown("space")) {
-            Publish("Space", gameObject);
-        }
+    public void PickUpBucket() {
+        Publish("PickUpTriggered", gameObject);
+    }
+
+    public void FillAllBuckets() {
+        Publish("FillAllBuckets", gameObject);
     }
     
     void HandleOnPickUp(GameObject g) {
         HoldingObject = true;
-        Debug.Log("Player Picked Up!");
     }
     
     bool HandleCanPickUp(GameObject g) {

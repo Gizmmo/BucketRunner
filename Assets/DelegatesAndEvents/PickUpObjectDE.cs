@@ -2,10 +2,13 @@
 using System.Collections;
 using System;
 
-public class PickUpObject : MonoBehaviour {
+public class PickUpObjectDE : MonoBehaviour {
     public event Action<GameObject> OnPickUp;
+    public event Action<GameObject> OnFillBucket;
     
     public event Func<GameObject, bool> CanPickUp;
+
+    private bool isFull;
     
     public void PickUp(GameObject objectToFollow) {
         if(IsAbleToPickUp()) {
@@ -13,6 +16,12 @@ public class PickUpObject : MonoBehaviour {
             if(OnPickUp != null)
                 OnPickUp(gameObject);
         }
+    }
+
+    public void FillBucket() {
+        isFull = true;
+        if(OnFillBucket != null)
+            OnFillBucket(gameObject);
     }
     
     bool IsAbleToPickUp() {

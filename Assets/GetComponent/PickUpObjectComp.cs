@@ -6,8 +6,13 @@ public class PickUpObjectComp : MonoBehaviour {
 
     private OtherComp otherScript;
     private PlayerComp playerScript;
+    private bool isFull;
 
     void Start() {
+        GetScripts();
+    }
+
+    public void GetScripts() {
         otherScript = other.GetComponent<OtherComp>();
         playerScript = player.GetComponent<PlayerComp>();
     }
@@ -15,8 +20,13 @@ public class PickUpObjectComp : MonoBehaviour {
     public void PickUp(GameObject objectToFollow) {
         if(!playerScript.HoldingObject) {
             gameObject.transform.parent = objectToFollow.transform;
-            otherScript.BucketPickUp();
+            otherScript.BucketsOnGround--;
             playerScript.HoldingObject = true;
         }
+    }
+
+    public void FillBucket() {
+        isFull = true;
+        otherScript.BucketFilled();
     }
 }

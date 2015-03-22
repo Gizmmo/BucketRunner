@@ -2,9 +2,17 @@
 
 public class OtherBroadcast : MonoBehaviour {
     int waterLevel;
+    int bucketsOnGround;
 
-    public void PickUpBucket() {
+    void BucketFilled() {
         waterLevel++;
-        Debug.Log(waterLevel);
+    }
+
+    void BucketPickedUp() {
+    	bucketsOnGround++;
+    }
+
+    void AddBucket() {
+    	bucketsOnGround++;
     }
 }

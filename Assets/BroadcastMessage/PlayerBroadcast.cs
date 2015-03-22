@@ -1,19 +1,26 @@
 ﻿using UnityEngine;
+using System.Collections.Generic;
 
 public class PlayerBroadcast : MonoBehaviour {
     bool holdingObject;
+    private List<GameObject> buckets = new List<GameObject>();
     
-    void Update() {
-    	if (Input.GetKeyDown("space")) {
-            GameObject[] buckets = GameObject.FindGameObjectsWithTag("Bucket");
-        	GameObject bucket = buckets[0];
-            var objScript = bucket.GetComponent<PickUpObjectBroadcast>();
-            objScript.PickUp(gameObject);
-        }
-    }
-    
-    void PickUpBucket() {
+    void BucketPickedUp() {
         HoldingObject = true;
+    }
+
+    public void PickUpBucket() {
+        buckets[0].BroadcastMessage("PickUp", gameObject);
+    }
+
+    void AddBucket(GameObject bucket) {
+        buckets.Add(bucket);
+    }
+
+    public void FillAllBuckets() {
+        foreach(var bucket in buckets) {
+            bucket.BroadcastMessage("FillBucket");
+        }
     }
 
     public bool HoldingObject {get; set;}

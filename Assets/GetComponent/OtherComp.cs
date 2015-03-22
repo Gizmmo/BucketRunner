@@ -2,9 +2,12 @@
 
 public class OtherComp : MonoBehaviour {
     int waterLevel;
+    int bucketsOnGround;
 
-    public void BucketPickUp() {
+    public void BucketFilled() {
         waterLevel++;
-        Debug.Log(waterLevel);
     }
+
+    public int BucketsOnGround {get; set;}
+
 }
