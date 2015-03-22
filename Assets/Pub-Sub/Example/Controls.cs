@@ -11,8 +11,8 @@ public class Controls : MonoBehaviour {
 	// Update is called once per frame
 	void Update() {
 		if (Input.GetKeyDown("space")) {
-			Debug.Log("Void Size " + EventDispatcher.VoidSize);
-			Debug.Log("Bool Size " + EventDispatcher.BoolSize);
+			Debug.Log("Void Size " + GlobalDispatcher.VoidSize);
+			Debug.Log("Bool Size " + GlobalDispatcher.BoolSize);
 		}
 	}
 }

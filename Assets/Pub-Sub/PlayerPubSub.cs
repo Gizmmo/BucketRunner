@@ -8,13 +8,13 @@ public class PlayerPubSub : Manager {
     }
 
     void RegisterBuckets() {
-    	Subscribe("PickUp", HandleOnPickUp);
-        SubscribeBool("CanPickUp", HandleCanPickUp);
+    	GlobalSubscribe("PickUp", HandleOnPickUp);
+        GlobalSubscribeBool("CanPickUp", HandleCanPickUp);
     }
 
     void Update() {
     	if (Input.GetKeyDown("space")) {
-            Publish("Space", gameObject);
+            GlobalPublish("Space", gameObject);
         }
     }
     

@@ -8,8 +8,8 @@ public class OtherPubSub : Manager {
     }
 
     void RegisterBuckets() {
-        Subscribe("PickUp", HandleOnPickUp);
-        SubscribeBool("CanPickUp", HandleCanPickUp);
+        GlobalSubscribe("PickUp", HandleOnPickUp);
+        GlobalSubscribeBool("CanPickUp", HandleCanPickUp);
     }
 
     bool HandleCanPickUp(GameObject g) {

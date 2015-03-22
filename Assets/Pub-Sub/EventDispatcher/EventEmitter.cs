@@ -18,9 +18,9 @@ public abstract class EventEmitter : MonoBehaviour {
 	/// </summary>
 	/// <param name="key">Name of Value in Dictionary</param>
 	/// <param name="sub">Subscription of methods to Key</param>
-	public void SubscribeBool(string key, Func<GameObject, bool> b){
+	public void GlobalSubscribeBool(string key, Func<GameObject, bool> b){
 		funcEvents.Add(new KeyValuePair<string, Func<GameObject, bool>>(key, b));
-		EventDispatcher.SubscribeBool(key, b);
+		GlobalDispatcher.SubscribeBool(key, b);
 	}
 
 	/// <summary>
@@ -30,9 +30,9 @@ public abstract class EventEmitter : MonoBehaviour {
 	/// </summary>
 	/// <param name="key">Name of Value in Dictionary</param>
 	/// <param name="sub">Subscription of methods to Key</param>
-	public void Subscribe(string key, Action<GameObject> sub) {
+	public void GlobalSubscribe(string key, Action<GameObject> sub) {
 		actionEvents.Add(new KeyValuePair<string, Action<GameObject>>(key, sub));
-		EventDispatcher.Subscribe(key, sub);
+		GlobalDispatcher.Subscribe(key, sub);
 	}
 
 	/// <summary>
@@ -41,8 +41,8 @@ public abstract class EventEmitter : MonoBehaviour {
 	/// </summary>	
 	/// <param name="key">Name of the Event in Dictionary</param>
 	/// <param name="g">Game Object where the Event took place </param>
-	public void Publish(string key, GameObject g) {
-		EventDispatcher.Publish(key, g);
+	public void GlobalPublish(string key, GameObject g) {
+		GlobalDispatcher.Publish(key, g);
 	}
 
 	/// <summary>
@@ -55,8 +55,8 @@ public abstract class EventEmitter : MonoBehaviour {
 	/// <param name="key">Name of the Event in Dictionary</param>
 	/// <param name="g">Game Object where the Event took place </param>
 	/// <param name="returnValue">Boolean returned from the publish event</param>
-	public bool PublishBool(string key, GameObject g) {
-		return EventDispatcher.PublishBool(key, g);
+	public bool GlobalPublishBool(string key, GameObject g) {
+		return GlobalDispatcher.PublishBool(key, g);
 	}
 
 	/// <summary>
@@ -67,7 +67,7 @@ public abstract class EventEmitter : MonoBehaviour {
 	/// </summary>
 	/// <param name="key">key Subscrbed to</param>
 	/// <param name="sub">sub Method to be called</param>
-	public void Unsubscribe(string key, Action<GameObject> sub) {
+	public void GlobalUnsubscribe(string key, Action<GameObject> sub) {
 		int index = actionEvents.FindIndex(pair => pair.Key == key && pair.Value == sub);
 		if(index != -1) {
 			actionEvents.RemoveAt(index);
@@ -83,7 +83,7 @@ public abstract class EventEmitter : MonoBehaviour {
 	/// </summary>
 	/// <param name="key">key Subscrbed to</param>
 	/// <param name="sub">sub Method to be called</param>
-	public void UnsubscribeBool(string key, Func<GameObject, bool> sub) {
+	public void GlobalUnsubscribeBool(string key, Func<GameObject, bool> sub) {
 		int index = funcEvents.FindIndex(pair => pair.Key == key && pair.Value == sub);
 		if(index != -1) {
 			funcEvents.RemoveAt(index);
@@ -95,14 +95,14 @@ public abstract class EventEmitter : MonoBehaviour {
 	/// <param name="key">key Subscribed to</param>
 	/// <param name="sub">sub Method to be called</param>
 	void UnsubscribeDispatcher(string key, Action<GameObject> sub) {
-		EventDispatcher.Unsubscribe(key, sub);
+		GlobalDispatcher.Unsubscribe(key, sub);
 	}
 
 	/// <summary>Call Ubsubscribe in the Event Dispatcher</summary>
 	/// <param name="key">key Subscribed to</param>
 	/// <param name="sub">sub Method to be called</param>
-	public void UnsubscribeBoolDispatcher(string key, Func<GameObject, bool> sub) {
-		EventDispatcher.UnsubscribeBool(key, sub);
+	void UnsubscribeBoolDispatcher(string key, Func<GameObject, bool> sub) {
+		GlobalDispatcher.UnsubscribeBool(key, sub);
 	}
 
 	/// <summary>Unsubscribe all Pubs Subs When Object is Disabled.</summary>
@@ -121,5 +121,7 @@ public abstract class EventEmitter : MonoBehaviour {
 		 }
 
 		 funcEvents.Clear();
+
+		 Debug.Log("Cleared Event Emitter");
 	}
 }

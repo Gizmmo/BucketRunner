@@ -5,10 +5,16 @@ public class ComponentExample : Grunt {
 
 	// Use this for initialization
 	void Start () {
-		Publish("ComponentStarted", gameObject);
-		PublishBool("ComponentStarted", gameObject);
+		GlobalPublish("ComponentStarted", gameObject);
+		GlobalPublishBool("ComponentStarted", gameObject);
+		Subscribe("Test", Test);
+		Publish("Test", gameObject);
+	}
+	
+	void Test(GameObject g) {
+		Debug.Log("We worked in local dispatcher!");
 	}
 
-	
+
 	
 }
